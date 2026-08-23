@@ -157,3 +157,57 @@ This dataset presents several challenges:
 Therefore, evaluation will focus on **precision, recall, and ROC-AUC**, rather than accuracy alone.
 
 ---
+
+# REST API
+
+The trained model is served over HTTP by a **FastAPI** application, so the fraud
+detector can be called from anything — a website, a mobile app, or `curl` —
+rather than only from inside a notebook.
+
+```bash
+pip install -r requirements.txt
+python train.py                          # writes artifacts/
+python -m uvicorn app.main:app --reload  # serves on http://127.0.0.1:8000
+```
+
+Interactive documentation is generated automatically at **`/docs`**, pre-filled
+with a real fraudulent transaction so every endpoint can be tried in the browser.
+
+| Method | Path | Purpose |
+|---|---|---|
+| `GET` | `/health` | Liveness and model status |
+| `POST` | `/predict` | Score one transaction |
+| `POST` | `/predict/batch` | Score up to 1000 transactions |
+| `GET` | `/model/info` | Model type, training details, held-out metrics |
+| `GET` | `/stats` | Summary of the training dataset |
+
+Full documentation, including the design decisions behind the API, is in
+**[API_README.md](API_README.md)**.
+
+---
+
+# ⚠️ Known data issue: the CSV header is shifted by one column
+
+`credit_card_fraud.csv` ships with a header row that does not line up with the
+columns beneath it:
+
+| Header says | Column actually holds |
+|---|---|
+| `V1` | **Time** — seconds elapsed, 0 to 172,768 (a 48-hour window) |
+| `V2` … `V29` | **V1 … V28** — the 28 PCA components |
+| `time` | **Amount** — 0.00 to 8,360.00, mean 86.78 |
+| `fraud` | The class label, as the strings `fraud` / `otherwise` |
+
+Confirmed two ways: the first column's range and cardinality are those of a
+timestamp, not a PCA component; and ranking columns by class separation puts
+`V15, V13, V5, V12, V11` on top, which shifted down by one gives
+`V14, V12, V4, V11, V10` — the known top discriminators of this dataset.
+
+**The CSV is left untouched.** The correction is applied on load in
+`app/config.py`, so the API trains on correctly named features. The notebooks
+still read the file as before, which means **feature names in the EDA notebook
+are off by one** — the chart labelled `Amount (V1)` is in fact plotting *Time*.
+The models themselves are unaffected, since a classifier does not care what a
+column is called.
+
+---
