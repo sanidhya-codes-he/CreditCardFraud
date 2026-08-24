@@ -1,0 +1,67 @@
+{
+  "dataset": {
+    "source_file": "credit_card_fraud.csv",
+    "rows": 28469,
+    "duplicate_rows_removed": 10,
+    "feature_columns": 29,
+    "missing_values": 0,
+    "time_span_hours": 47.99,
+    "header_note": "The shipped CSV header is off by one column and is corrected on load; see app/config.py."
+  },
+  "class_balance": {
+    "legitimate": 28420,
+    "fraud": 49,
+    "fraud_percentage": 0.1721,
+    "imbalance_ratio": "1:580"
+  },
+  "amount": {
+    "min": 0.0,
+    "max": 8360.0,
+    "mean": 86.78,
+    "median": 22.0,
+    "mean_fraud": 108.05,
+    "mean_legitimate": 86.74
+  },
+  "top_features": [
+    {
+      "feature": "V17",
+      "abs_correlation_with_fraud": 0.3415
+    },
+    {
+      "feature": "V14",
+      "abs_correlation_with_fraud": 0.2918
+    },
+    {
+      "feature": "V12",
+      "abs_correlation_with_fraud": 0.2695
+    },
+    {
+      "feature": "V10",
+      "abs_correlation_with_fraud": 0.2421
+    },
+    {
+      "feature": "V7",
+      "abs_correlation_with_fraud": 0.2307
+    },
+    {
+      "feature": "V3",
+      "abs_correlation_with_fraud": 0.2133
+    },
+    {
+      "feature": "V16",
+      "abs_correlation_with_fraud": 0.2118
+    },
+    {
+      "feature": "V11",
+      "abs_correlation_with_fraud": 0.1528
+    },
+    {
+      "feature": "V4",
+      "abs_correlation_with_fraud": 0.1374
+    },
+    {
+      "feature": "V18",
+      "abs_correlation_with_fraud": 0.1267
+    }
+  ]
+}

@@ -4,7 +4,11 @@ uvicorn[standard]>=0.30
 pydantic>=2.9
 
 # --- modelling ---
-scikit-learn>=1.5
+# scikit-learn is pinned exactly because artifacts/model.joblib is a pickle
+# produced by this version. A different version still loads it, but warns that
+# it cannot guarantee the result. Retrain with `python train.py` to rebuild the
+# model against whatever version you prefer.
+scikit-learn==1.9.0
 pandas>=2.2
 numpy>=2.0
 joblib>=1.4

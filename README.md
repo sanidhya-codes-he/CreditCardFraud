@@ -164,11 +164,15 @@ The trained model is served over HTTP by a **FastAPI** application, so the fraud
 detector can be called from anything — a website, a mobile app, or `curl` —
 rather than only from inside a notebook.
 
+The trained model ships with the repo (`artifacts/`, ~9 KB), so there is no
+training step to run first:
+
 ```bash
 pip install -r requirements.txt
-python train.py                          # writes artifacts/
 python -m uvicorn app.main:app --reload  # serves on http://127.0.0.1:8000
 ```
+
+Retraining is optional — `python train.py` rebuilds the model from the CSV.
 
 Interactive documentation is generated automatically at **`/docs`**, pre-filled
 with a real fraudulent transaction so every endpoint can be tried in the browser.
